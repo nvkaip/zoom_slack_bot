@@ -1,20 +1,37 @@
 package com.zoom_slack_bot.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 import java.util.Objects;
 
 public class Meeting {
 
     private String uuid; // Meeting unique ID.
+
     private String id; // Meeting ID - also known as the meeting number.
-    private String account_id; // ID of the user account.
-    private String host_id; // ID of the user set as host of meeting.
+
+    @JsonProperty("account_id")
+    private String accountId; // ID of the user account.
+
+    @JsonProperty("host_id")
+    private String hostId; // ID of the user set as host of meeting.
+
     private String topic; // Meeting topic.
-    private String start_time; // Meeting start time. Format: date-time
+
+    @JsonProperty("start_time")
+    private String startTime; // Meeting start time. Format: date-time
+
     private int duration; // Meeting duration.
-    private String total_size; // Total size.
-    private String recording_count; // Recording count.
-    private List<Recording> recording_files; // List of recording file.
+
+    @JsonProperty("total_size")
+    private String totalSize; // Total size.
+
+    @JsonProperty("recording_count")
+    private String recordingCount; // Recording count.
+
+    @JsonProperty("recording_files")
+    private List<Recording> recordingFiles; // List of recording file.
 
     public Meeting() {
     }
@@ -36,19 +53,19 @@ public class Meeting {
     }
 
     public String getAccountId() {
-        return account_id;
+        return accountId;
     }
 
     public void setAccountId(String account_id) {
-        this.account_id = account_id;
+        this.accountId = account_id;
     }
 
     public String getHostId() {
-        return host_id;
+        return hostId;
     }
 
     public void setHostId(String host_id) {
-        this.host_id = host_id;
+        this.hostId = host_id;
     }
 
     public String getTopic() {
@@ -60,11 +77,11 @@ public class Meeting {
     }
 
     public String getStartTime() {
-        return start_time;
+        return startTime;
     }
 
     public void setStartTime(String start_time) {
-        this.start_time = start_time;
+        this.startTime = start_time;
     }
 
     public int getDuration() {
@@ -76,27 +93,27 @@ public class Meeting {
     }
 
     public String getTotalSize() {
-        return total_size;
+        return totalSize;
     }
 
     public void setTotalSize(String total_size) {
-        this.total_size = total_size;
+        this.totalSize = total_size;
     }
 
     public String getRecordingCount() {
-        return recording_count;
+        return recordingCount;
     }
 
     public void setRecordingCount(String recording_count) {
-        this.recording_count = recording_count;
+        this.recordingCount = recording_count;
     }
 
     public List<Recording> getRecordingFiles() {
-        return recording_files;
+        return recordingFiles;
     }
 
     public void setRecordingFiles(List<Recording> recording_files) {
-        this.recording_files = recording_files;
+        this.recordingFiles = recording_files;
     }
 
     @Override
@@ -106,13 +123,13 @@ public class Meeting {
         Meeting meeting = (Meeting) o;
         return Objects.equals(uuid, meeting.uuid) &&
                 Objects.equals(id, meeting.id) &&
-                Objects.equals(account_id, meeting.account_id) &&
-                Objects.equals(host_id, meeting.host_id);
+                Objects.equals(accountId, meeting.accountId) &&
+                Objects.equals(hostId, meeting.hostId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, id, account_id, host_id, topic, start_time, duration, total_size, recording_count, recording_files);
+        return Objects.hash(uuid, id, accountId, hostId, topic, startTime, duration, totalSize, recordingCount, recordingFiles);
     }
 
     @Override
@@ -120,14 +137,14 @@ public class Meeting {
         return "Meeting{" +
                 "uuid='" + uuid + '\'' +
                 ", id='" + id + '\'' +
-                ", account_id='" + account_id + '\'' +
-                ", host_id='" + host_id + '\'' +
+                ", accountId='" + accountId + '\'' +
+                ", hostId='" + hostId + '\'' +
                 ", topic='" + topic + '\'' +
-                ", start_time='" + start_time + '\'' +
+                ", startTime='" + startTime + '\'' +
                 ", duration=" + duration +
-                ", total_size='" + total_size + '\'' +
-                ", recording_count='" + recording_count + '\'' +
-                ", recording_files=" + recording_files +
+                ", totalSize='" + totalSize + '\'' +
+                ", recordingCount='" + recordingCount + '\'' +
+                ", recordingFiles=" + recordingFiles +
                 '}';
     }
 }

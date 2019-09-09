@@ -7,8 +7,10 @@ import java.util.Objects;
 public class User {
 
     private String id;
+
     @JsonProperty("first_name")
     private String firstName;
+
     private String email;
 
     public User() {

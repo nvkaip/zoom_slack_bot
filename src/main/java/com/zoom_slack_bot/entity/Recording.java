@@ -1,6 +1,6 @@
 package com.zoom_slack_bot.entity;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
@@ -8,17 +8,34 @@ public class Recording {
 
     private String id; // The recording file ID. Response in general query.
 
-    @SerializedName("meeting_id")
+    @JsonProperty("meeting_id")
     private String meetingId; // The meeting ID.
-    private String recording_start; // The recording start time.
-    private String recording_end; // The recording end time. Response in general query.
-    private String file_type; // The recording file type.
-    private Number file_size; // The recording file size.
-    private String play_url; // The recording file play URL. Response in general query.
-    private String download_url; // The recording download URL. Response in general query.
+
+    @JsonProperty("recording_start")
+    private String recordingStart; // The recording start time.
+
+    @JsonProperty("recording_end")
+    private String recordingEnd; // The recording end time. Response in general query.
+
+    @JsonProperty("file_type")
+    private String fileType; // The recording file type.
+
+    @JsonProperty("file_size")
+    private Number fileSize; // The recording file size.
+
+    @JsonProperty("play_url")
+    private String playUrl; // The recording file play URL. Response in general query.
+
+    @JsonProperty("download_url")
+    private String downloadUrl; // The recording download URL. Response in general query.
+
     private String status; // The recording status. Response in general query.
-    private String deleted_time; // The recording delete time. Response in trash query.
-    private String recording_type; // The recording file type:
+
+    @JsonProperty("deleted_time")
+    private String deletedTime; // The recording delete time. Response in trash query.
+
+    @JsonProperty("recording_type")
+    private String recordingType; // The recording file type:
                                     // `shared_screen_with_speaker_view(CC)`
                                     // `shared_screen_with_speaker_view`
                                     // `shared_screen_with_gallery_view`
@@ -51,51 +68,51 @@ public class Recording {
     }
 
     public String getRecordingStart() {
-        return recording_start;
+        return recordingStart;
     }
 
     public void setRecordingStart(String recording_start) {
-        this.recording_start = recording_start;
+        this.recordingStart = recording_start;
     }
 
     public String getRecordingEnd() {
-        return recording_end;
+        return recordingEnd;
     }
 
     public void setRecordingEnd(String recording_end) {
-        this.recording_end = recording_end;
+        this.recordingEnd = recording_end;
     }
 
     public String getFileType() {
-        return file_type;
+        return fileType;
     }
 
     public void setFileType(String file_type) {
-        this.file_type = file_type;
+        this.fileType = file_type;
     }
 
     public Number getFileSize() {
-        return file_size;
+        return fileSize;
     }
 
     public void setFileSize(Number file_size) {
-        this.file_size = file_size;
+        this.fileSize = file_size;
     }
 
     public String getPlayUrl() {
-        return play_url;
+        return playUrl;
     }
 
     public void setPlayUrl(String play_url) {
-        this.play_url = play_url;
+        this.playUrl = play_url;
     }
 
     public String getDownloadUrl() {
-        return download_url;
+        return downloadUrl;
     }
 
     public void setDownloadUrl(String download_url) {
-        this.download_url = download_url;
+        this.downloadUrl = download_url;
     }
 
     public String getStatus() {
@@ -107,19 +124,19 @@ public class Recording {
     }
 
     public String getDeletedTime() {
-        return deleted_time;
+        return deletedTime;
     }
 
     public void setDeletedTime(String deleted_time) {
-        this.deleted_time = deleted_time;
+        this.deletedTime = deleted_time;
     }
 
     public String getRecordingType() {
-        return recording_type;
+        return recordingType;
     }
 
     public void setRecordingType(String recording_type) {
-        this.recording_type = recording_type;
+        this.recordingType = recording_type;
     }
 
     @Override
@@ -133,8 +150,8 @@ public class Recording {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, meetingId, recording_start, recording_end, file_type,
-                file_size, play_url, download_url, status, deleted_time, recording_type);
+        return Objects.hash(id, meetingId, recordingStart, recordingEnd, fileType,
+                fileSize, playUrl, downloadUrl, status, deletedTime, recordingType);
     }
 
     @Override
@@ -142,15 +159,15 @@ public class Recording {
         return "Recording{" +
                 "id='" + id + '\'' +
                 ", meetingId='" + meetingId + '\'' +
-                ", recording_start='" + recording_start + '\'' +
-                ", recording_end='" + recording_end + '\'' +
-                ", file_type='" + file_type + '\'' +
-                ", file_size=" + file_size +
-                ", play_url='" + play_url + '\'' +
-                ", download_url='" + download_url + '\'' +
+                ", recordingStart='" + recordingStart + '\'' +
+                ", recordingEnd='" + recordingEnd + '\'' +
+                ", fileType='" + fileType + '\'' +
+                ", fileSize=" + fileSize +
+                ", playUrl='" + playUrl + '\'' +
+                ", downloadUrl='" + downloadUrl + '\'' +
                 ", status='" + status + '\'' +
-                ", deleted_time='" + deleted_time + '\'' +
-                ", recording_type='" + recording_type + '\'' +
+                ", deletedTime='" + deletedTime + '\'' +
+                ", recordingType='" + recordingType + '\'' +
                 '}';
     }
 }
