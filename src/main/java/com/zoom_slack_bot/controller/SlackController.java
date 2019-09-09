@@ -21,7 +21,15 @@ public class SlackController {
 
     private JWTUtil jwt;
     private static final Logger LOGGER = LoggerFactory.getLogger(SlackController.class);
-    private static final String ZOOM_USERS = "https://api.zoom.us/v2/users/";
+
+    /**
+     * Date from and to is in format yyyy.mm.dd, if needed, can be added to request params
+     */
+    private static final String ZOOM_RECORDINGS = "https://api.zoom.us/v2/users/%s" +
+            "/recordings?page_size=30&mc=false&trash=<boolean>&from=<date>&to=<date>";
+    private static final String ZOOM_USER_INFO = "https://api.zoom.us/v2/users/%s" +
+            "/?login_type=<string>";
+    private RestTemplate restTemplate = new RestTemplate();
 
     @PostMapping("/init/zoom")
     public ModelAndView setZoomParams(@RequestParam(value = "zoom_api_key") String zoomApiKey,
@@ -36,13 +44,11 @@ public class SlackController {
 
     @PostMapping("/recordings")
     public String getRecordings(@RequestParam(value = "text") String email) {
-        RestTemplate restTemplate = new RestTemplate();
+//        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + jwt.getJwt());
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        String urlString = ZOOM_USERS + email +
-                "/recordings?page_size=30&mc=false&trash=<boolean>&from=<date>" +//date in format yyyy.mm.dd
-                "&to=<date>";//date in format yyyy.mm.dd
+        String urlString = String.format(ZOOM_RECORDINGS, email);
         try {
             ResponseEntity<MeetingsList> responseEntity =
                     restTemplate.exchange(urlString, HttpMethod.GET, entity, MeetingsList.class);
@@ -67,11 +73,11 @@ public class SlackController {
 
     @PostMapping("/user")
     public String getUserSettings(@RequestParam(value = "text") String email) {
-        RestTemplate restTemplate = new RestTemplate();
+//        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + jwt.getJwt());
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        String urlString = ZOOM_USERS + email + "/?login_type=<string>";
+        String urlString = String.format(ZOOM_USER_INFO, email);
         try {
             ResponseEntity<User> responseEntity =
                     restTemplate.exchange(urlString, HttpMethod.GET, entity, User.class);
