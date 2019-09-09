@@ -17,6 +17,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
+
 @RestController
 public class SlackController {
 
@@ -72,37 +75,33 @@ public class SlackController {
     }
 
     @PostMapping("/user")
+    @Produces("application/json")
     public JSONObject getUserSettings(@RequestParam(value = "text") String email) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + jwt.getJwt());//TODO make it form DB by email
         HttpEntity<String> entity = new HttpEntity<>(headers);
         String urlString = String.format(ZOOM_USER_INFO, email);
-        JSONObject response = new JSONObject();
+        JSONObject responseBody = new JSONObject();
         try {
             ResponseEntity<User> responseEntity =
                     restTemplate.exchange(urlString, HttpMethod.GET, entity, User.class);
             if (responseEntity.getBody() != null) {
                 String textResponse = responseEntity.getBody().toString();
-                response.put("header", "content-type=application/json");
-                response.put("response_type", "in_channel");
-                response.put("text", textResponse);
-                LOGGER.info(response.toString());
-                return response;
+                responseBody.put("response_type", "in_channel");
+                responseBody.put("text", textResponse);
+                LOGGER.info(responseBody.toString());
             } else {
-                response.put("header", "content-type=application/json");
-                response.put("response_type", "in_channel");
-                response.put("text", "Response was empty");
-                return response;
+                responseBody.put("response_type", "in_channel");
+                responseBody.put("text", "Response was empty");
             }
         } catch (HttpClientErrorException e){
             String exceptionMessage = "There were some problems with connection:\n" +
                     e.getResponseBodyAsString();
             LOGGER.warn(exceptionMessage);
-            response.put("header", "content-type=application/json");
-            response.put("response_type", "in_channel");
-            response.put("text", exceptionMessage);
+            responseBody.put("response_type", "in_channel");
+            responseBody.put("text", exceptionMessage);
         }
-        return response;
+        return responseBody;
     }
 
     @PostMapping("/test")
