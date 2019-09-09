@@ -8,7 +8,7 @@ public class Recording {
 
     private String id; // The recording file ID. Response in general query.
 
-    @SerializedName("meetingId")
+    @SerializedName("meeting_id")
     private String meetingId; // The meeting ID.
     private String recording_start; // The recording start time.
     private String recording_end; // The recording end time. Response in general query.
