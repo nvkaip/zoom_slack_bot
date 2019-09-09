@@ -1,4 +1,4 @@
-package com.nvkaip.zoom_slack_bot.util;
+package com.zoom_slack_bot.util;
 
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -6,9 +6,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
+import static java.sql.Date.valueOf;
 
 public class JWTUtil {
 
@@ -24,19 +24,16 @@ public class JWTUtil {
 
     public void setJwt(String issuer, String apiSecret, int days) {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-        Date now = new Date();
+        LocalDate today = LocalDate.now();
         byte[] apiKeySecretBytes = apiSecret.getBytes();
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
         JwtBuilder builder = Jwts.builder()
-                .setIssuedAt(now)
+                .setIssuedAt(valueOf(today))
                 .setIssuer(issuer)
                 .signWith(signatureAlgorithm, signingKey);
         if (days > 0) {
-            Calendar c = Calendar.getInstance();
-            c.setTime(new Date());
-            c.add(Calendar.DAY_OF_MONTH, days);
-            Date expDate = c.getTime();
-            builder.setExpiration(expDate);
+            LocalDate expDate = LocalDate.now().plusDays(days);
+            builder.setExpiration(valueOf(expDate));
         }
         this.jwt = builder.compact();
     }

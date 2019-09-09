@@ -1,4 +1,4 @@
-package com.nvkaip.zoom_slack_bot.entity;
+package com.zoom_slack_bot.entity;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -12,12 +12,11 @@
         <tr>
             <td>
                 <p>To use this helper, you have to set up your Slack and Zoom as follows:</p>
-                <p>1) add an Incoming Web hook to your channel in Slack and set its value here;</p>
-                <p>2) add a Slash Command with Request URL:</p>
+                <p>1) add a Slash Command with Request URL:</p>
                 <p>   https://video-from-zoom.herokuapp.com/recordings - will give you video URL</p>
                 <p>   https://video-from-zoom.herokuapp.com/user - will give you some User info</p>
-                <p>3) build a JWT type app in Zoom and set its vales here</p>
-                <p>4) use slash command in Slack with email address used in Zoom</p>
+                <p>2) build a JWT type app in Zoom and set its vales here</p>
+                <p>3) use slash command in Slack with email address used in Zoom</p>
                 <p>   (for example "/getuser test@test.com")</p>
             </td>
             <td>
@@ -26,9 +25,7 @@
                     <p>Zoom API key <input name="zoom_api_key" type="text"></p>
                     <p>Zoom API secret <input name="zoom_api_secret" type="text"></p>
                     <p>Days for Zoom token <input name="duration" type="number"></p>
-                    <p>Slack hook URL <input name="slack_hook" type="url"></p>
                     <button type="submit" formaction="/init/zoom">Set Zoom</button>
-                    <button type="submit" formaction="/init/slack">Set Slack</button>
                 </form>
             </td>
         </tr>

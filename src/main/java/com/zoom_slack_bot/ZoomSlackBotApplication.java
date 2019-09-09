@@ -1,4 +1,4 @@
-package com.nvkaip.zoom_slack_bot;
+package com.zoom_slack_bot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

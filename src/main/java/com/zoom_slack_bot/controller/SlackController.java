@@ -1,8 +1,8 @@
-package com.nvkaip.zoom_slack_bot.controller;
+package com.zoom_slack_bot.controller;
 
-import com.nvkaip.zoom_slack_bot.entity.MeetingsList;
-import com.nvkaip.zoom_slack_bot.entity.User;
-import com.nvkaip.zoom_slack_bot.util.JWTUtil;
+import com.zoom_slack_bot.entity.MeetingsList;
+import com.zoom_slack_bot.entity.User;
+import com.zoom_slack_bot.util.JWTUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -19,24 +19,15 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 public class SlackController {
 
-    private static String SLACK_HOOK_URL;
-    private static JWTUtil JWT;
+    private JWTUtil jwt;
     private static final Logger LOGGER = LoggerFactory.getLogger(SlackController.class);
-
-    @PostMapping("/init/slack")
-    public ModelAndView setSlackParams(@RequestParam(value = "slack_hook") String slackHook) {
-        SLACK_HOOK_URL = slackHook;
-        ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("message", "Web hook URL for Slack set successfully");
-        LOGGER.info("Webhook URL for Slack set successfully");
-        return modelAndView;
-    }
+    private static final String ZOOM_USERS = "https://api.zoom.us/v2/users/";
 
     @PostMapping("/init/zoom")
     public ModelAndView setZoomParams(@RequestParam(value = "zoom_api_key") String zoomApiKey,
                                 @RequestParam(value = "zoom_api_secret") String zoomApiSecret,
                                 @RequestParam(value = "duration", defaultValue = "1") int days) {
-        JWT = new JWTUtil(zoomApiKey, zoomApiSecret, days);
+        jwt = new JWTUtil(zoomApiKey, zoomApiSecret, days);
         ModelAndView modelAndView = new ModelAndView("index");
         modelAndView.addObject("message", "Token for Zoom set successfully");
         LOGGER.info("Token for Zoom set successfully");
@@ -47,9 +38,9 @@ public class SlackController {
     public String getRecordings(@RequestParam(value = "text") String email) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + JWT.getJwt());
+        headers.add("Authorization", "Bearer " + jwt.getJwt());
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        String urlString = "https://api.zoom.us/v2/users/" + email +
+        String urlString = ZOOM_USERS + email +
                 "/recordings?page_size=30&mc=false&trash=<boolean>&from=<date>" +//date in format yyyy.mm.dd
                 "&to=<date>";//date in format yyyy.mm.dd
         try {
@@ -58,8 +49,8 @@ public class SlackController {
             MeetingsList meetings = responseEntity.getBody();
             if (meetings != null
                     && !meetings.getMeetings().isEmpty()
-                    && !meetings.getMeetings().get(0).getRecording_files().isEmpty()) {
-                String playUrl = meetings.getMeetings().get(0).getRecording_files().get(0).getPlay_url();
+                    && !meetings.getMeetings().get(0).getRecordingFiles().isEmpty()) {
+                String playUrl = meetings.getMeetings().get(0).getRecordingFiles().get(0).getPlayUrl();
                 LOGGER.info("Video URL " + playUrl + " was sent");
                 return "{\"response_type\": \"in_channel\"," +
                         "\"text\":\"" + playUrl + "\"}";
@@ -78,10 +69,9 @@ public class SlackController {
     public String getUserSettings(@RequestParam(value = "text") String email) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + JWT.getJwt());
+        headers.add("Authorization", "Bearer " + jwt.getJwt());
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        String urlString = "https://api.zoom.us/v2/users/" +
-                email + "/?login_type=<string>";
+        String urlString = ZOOM_USERS + email + "/?login_type=<string>";
         try {
             ResponseEntity<User> responseEntity =
                     restTemplate.exchange(urlString, HttpMethod.GET, entity, User.class);
