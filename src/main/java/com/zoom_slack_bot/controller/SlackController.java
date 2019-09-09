@@ -83,6 +83,7 @@ public class SlackController {
                     restTemplate.exchange(urlString, HttpMethod.GET, entity, User.class);
             if (responseEntity.getBody() != null) {
                 String textResponse = responseEntity.getBody().toString();
+                response.put("header", "content-type=application/json");
                 response.put("response_type", "in_channel");
                 response.put("text", textResponse);
                 LOGGER.info(response.toString());
@@ -97,6 +98,7 @@ public class SlackController {
             String exceptionMessage = "There were some problems with connection:\n" +
                     e.getResponseBodyAsString();
             LOGGER.warn(exceptionMessage);
+            response.put("header", "content-type=application/json");
             response.put("response_type", "in_channel");
             response.put("text", exceptionMessage);
         }
