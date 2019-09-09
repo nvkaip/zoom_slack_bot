@@ -1,12 +1,13 @@
 package com.zoom_slack_bot.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
-import com.google.gson.annotations.SerializedName;
 
 public class User {
 
     private String id;
-    @SerializedName("first_name")
+    @JsonProperty("first_name")
     private String firstName;
     private String email;
 
