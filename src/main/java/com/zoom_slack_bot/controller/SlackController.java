@@ -3,6 +3,7 @@ package com.zoom_slack_bot.controller;
 import com.zoom_slack_bot.entity.MeetingsList;
 import com.zoom_slack_bot.entity.User;
 import com.zoom_slack_bot.util.JWTUtil;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -44,9 +45,8 @@ public class SlackController {
 
     @PostMapping("/recordings")
     public String getRecordings(@RequestParam(value = "text") String email) {
-//        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + jwt.getJwt());
+        headers.add("Authorization", "Bearer " + jwt.getJwt());//TODO make it form DB by email
         HttpEntity<String> entity = new HttpEntity<>(headers);
         String urlString = String.format(ZOOM_RECORDINGS, email);
         try {
@@ -72,28 +72,34 @@ public class SlackController {
     }
 
     @PostMapping("/user")
-    public String getUserSettings(@RequestParam(value = "text") String email) {
-//        RestTemplate restTemplate = new RestTemplate();
+    public JSONObject getUserSettings(@RequestParam(value = "text") String email) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + jwt.getJwt());
+        headers.add("Authorization", "Bearer " + jwt.getJwt());//TODO make it form DB by email
         HttpEntity<String> entity = new HttpEntity<>(headers);
         String urlString = String.format(ZOOM_USER_INFO, email);
+        JSONObject response = new JSONObject();
         try {
             ResponseEntity<User> responseEntity =
                     restTemplate.exchange(urlString, HttpMethod.GET, entity, User.class);
             if (responseEntity.getBody() != null) {
-                String response = responseEntity.getBody().toString();
+                String textResponse = responseEntity.getBody().toString();
                 LOGGER.info("User email was used");
-                return "{\"response_type\": \"in_channel\"," +
-                        "\"text\":\"" + response + "\"}";
+                response.put("response_type", "in_channel");
+                response.put("text", textResponse);
+                return response;
             } else {
-                return "{\"response_type\": \"in_channel\"," +
-                        "\"text\":\"Response was empty\"}";
+                response.put("response_type", "in_channel");
+                response.put("text", "Response was empty");
+                return response;
             }
         } catch (HttpClientErrorException e){
-            return "There were some problems with connection:\n" +
+            String exceptionMessage = "There were some problems with connection:\n" +
                     e.getResponseBodyAsString();
+            LOGGER.warn(exceptionMessage);
+            response.put("response_type", "in_channel");
+            response.put("text", exceptionMessage);
         }
+        return response;
     }
 
     @PostMapping("/test")
