@@ -75,8 +75,7 @@ public class SlackController {
     }
 
     @PostMapping("/user")
-    @Produces("application/json")
-    public JSONObject getUserSettings(@RequestParam(value = "text") String email) {
+    public String getUserSettings(@RequestParam(value = "text") String email) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + jwt.getJwt());//TODO make it form DB by email
         HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -95,13 +94,12 @@ public class SlackController {
                 responseBody.put("text", "Response was empty");
             }
         } catch (HttpClientErrorException e){
-            String exceptionMessage = "There were some problems with connection:\n" +
-                    e.getResponseBodyAsString();
-            LOGGER.warn(exceptionMessage);
+            String exceptionMessage = "There were some problems with connection";
+            LOGGER.warn(exceptionMessage + e.getResponseBodyAsString());
             responseBody.put("response_type", "in_channel");
             responseBody.put("text", exceptionMessage);
         }
-        return responseBody;
+        return responseBody.toString();
     }
 
     @PostMapping("/test")
