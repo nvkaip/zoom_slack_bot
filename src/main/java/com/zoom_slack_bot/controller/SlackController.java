@@ -83,11 +83,12 @@ public class SlackController {
                     restTemplate.exchange(urlString, HttpMethod.GET, entity, User.class);
             if (responseEntity.getBody() != null) {
                 String textResponse = responseEntity.getBody().toString();
-                LOGGER.info("User email was used");
                 response.put("response_type", "in_channel");
                 response.put("text", textResponse);
+                LOGGER.info(response.toString());
                 return response;
             } else {
+                response.put("header", "content-type=application/json");
                 response.put("response_type", "in_channel");
                 response.put("text", "Response was empty");
                 return response;
