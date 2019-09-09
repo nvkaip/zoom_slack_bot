@@ -17,9 +17,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
-
 @RestController
 public class SlackController {
 
