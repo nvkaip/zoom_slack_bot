@@ -25,7 +25,7 @@ public class SlackController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SlackController.class);
 
     /**
-     * Date from and to is in format yyyy.mm.dd, if needed, can be added to request params
+     * Date "from" and "to" is in format yyyy.mm.dd, if needed, can be added to request params
      */
     private static final String ZOOM_RECORDINGS = "https://api.zoom.us/v2/users/%s" +
             "/recordings?page_size=30&mc=false&trash=<boolean>&from=<date>&to=<date>";
