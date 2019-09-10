@@ -3,6 +3,7 @@ package com.zoom_slack_bot.controller;
 import com.zoom_slack_bot.entity.MeetingsList;
 import com.zoom_slack_bot.entity.User;
 import com.zoom_slack_bot.util.JWTUtil;
+import org.json.HTTP;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,8 @@ public class SlackController {
     private static final String ZOOM_USER_INFO = "https://api.zoom.us/v2/users/%s" +
             "/?login_type=<string>";
     private RestTemplate restTemplate = new RestTemplate();
+    private HttpEntity<String> entity;
+    private JSONObject responseBody;
 
     @PostMapping("/init/zoom")
     public ModelAndView setZoomParams(@RequestParam(value = "zoom_api_key") String zoomApiKey,
@@ -47,8 +50,9 @@ public class SlackController {
     public String getRecordings(@RequestParam(value = "text") String email) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + jwt.getJwt());//TODO make it form DB by email
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+        entity = new HttpEntity<>(headers);
         String urlString = String.format(ZOOM_RECORDINGS, email);
+        responseBody = new JSONObject();
         try {
             ResponseEntity<MeetingsList> responseEntity =
                     restTemplate.exchange(urlString, HttpMethod.GET, entity, MeetingsList.class);
@@ -57,27 +61,31 @@ public class SlackController {
                     && !meetings.getMeetings().isEmpty()
                     && !meetings.getMeetings().get(0).getRecordingFiles().isEmpty()) {
                 String playUrl = meetings.getMeetings().get(0).getRecordingFiles().get(0).getPlayUrl();
+                responseBody.put("response_type", "in_channel");
+                responseBody.put("text", playUrl);
                 LOGGER.info("Video URL " + playUrl + " was sent");
-                return "{\"response_type\": \"in_channel\"," +
-                        "\"text\":\"" + playUrl + "\"}";
             } else {
-                LOGGER.info("There is no video's url yet");
-                return "{\"response_type\": \"in_channel\"," +
-                        "\"text\":\"There is no video's url yet\"}";
+                String textResponse = "There is no video's url yet";
+                responseBody.put("response_type", "in_channel");
+                responseBody.put("text", textResponse);
+                LOGGER.info(textResponse);
             }
         } catch (HttpClientErrorException e){
-            return "There were some problems with connection:\n" +
-                    e.getResponseBodyAsString();
+            String exceptionMessage = "There were some problems with connection";
+            responseBody.put("response_type", "in_channel");
+            responseBody.put("text", exceptionMessage);
+            LOGGER.warn(exceptionMessage + e.getResponseBodyAsString());
         }
+        return responseBody.toString();
     }
 
     @PostMapping("/user")
     public String getUserSettings(@RequestParam(value = "text") String email) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + jwt.getJwt());//TODO make it form DB by email
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+        entity = new HttpEntity<>(headers);
         String urlString = String.format(ZOOM_USER_INFO, email);
-        JSONObject responseBody = new JSONObject();
+        responseBody = new JSONObject();
         try {
             ResponseEntity<User> responseEntity =
                     restTemplate.exchange(urlString, HttpMethod.GET, entity, User.class);
@@ -101,7 +109,10 @@ public class SlackController {
 
     @PostMapping("/test")
     public String getSlackSlashRequest(@RequestParam(value = "text") String string){
+        responseBody = new JSONObject();
         LOGGER.info(string);
-        return "{\"response_type\": \"in_channel\",\"text\":\"" + string + "\"}";
+        responseBody.put("response_type", "in_channel");
+        responseBody.put("text", string);
+        return responseBody.toString();
     }
 }
