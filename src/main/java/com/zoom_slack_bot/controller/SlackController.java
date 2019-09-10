@@ -1,12 +1,15 @@
 package com.zoom_slack_bot.controller;
 
 import com.zoom_slack_bot.entity.MeetingsList;
+import com.zoom_slack_bot.entity.Token;
 import com.zoom_slack_bot.entity.User;
+import com.zoom_slack_bot.services.TokenService;
 import com.zoom_slack_bot.util.JWTUtil;
 import org.json.HTTP;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.time.LocalDate;
 
 @RestController
 public class SlackController {
@@ -31,24 +36,39 @@ public class SlackController {
             "/recordings?page_size=30&mc=false&trash=<boolean>&from=<date>&to=<date>";
     private static final String ZOOM_USER_INFO = "https://api.zoom.us/v2/users/%s" +
             "/?login_type=<string>";
+    private TokenService tokenService;
     private RestTemplate restTemplate = new RestTemplate();
     private HttpEntity<String> entity;
     private JSONObject responseBody;
 
+    @Autowired
+    public SlackController(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
+
     @PostMapping("/init/zoom")
     public ModelAndView setZoomParams(@RequestParam(value = "zoom_api_key") String zoomApiKey,
                                 @RequestParam(value = "zoom_api_secret") String zoomApiSecret,
+                                @RequestParam(value = "email") String email,
                                 @RequestParam(value = "duration", defaultValue = "1") int days) {
-        jwt = new JWTUtil(zoomApiKey, zoomApiSecret, days);
         ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("message", "Token for Zoom set successfully");
-        LOGGER.info("Token for Zoom set successfully");
+        if (tokenService.getValidTokenByEmail(email, LocalDate.now()).isPresent()) {
+            modelAndView.addObject("message", "Token is active until: " +
+                    tokenService.getValidTokenByEmail(email, LocalDate.now()).get().getExpDate());
+            LOGGER.info("Token for Zoom set successfully");
+        } else {
+            jwt = new JWTUtil(zoomApiKey, zoomApiSecret, days);
+            tokenService.saveToken(new Token(jwt.getJwt(), email, LocalDate.now().plusDays(days)));
+            modelAndView.addObject("message", "Token for Zoom set successfully");
+            LOGGER.info("Token for Zoom set successfully");
+        }
         return modelAndView;
     }
 
     @PostMapping("/recordings")
     public String getRecordings(@RequestParam(value = "text") String email) {
         HttpHeaders headers = new HttpHeaders();
+
         headers.add("Authorization", "Bearer " + jwt.getJwt());//TODO make it form DB by email
         entity = new HttpEntity<>(headers);
         String urlString = String.format(ZOOM_RECORDINGS, email);

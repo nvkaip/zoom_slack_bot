@@ -16,6 +16,7 @@
                 <p>   https://video-from-zoom.herokuapp.com/recordings - will give you video URL</p>
                 <p>   https://video-from-zoom.herokuapp.com/user - will give you some User info</p>
                 <p>2) build a JWT type app in Zoom and set its vales here</p>
+                <p>   - email is an email you logged on Zoom</p>
                 <p>3) use slash command in Slack with email address used in Zoom</p>
                 <p>   (for example "/getuser test@test.com")</p>
             </td>
@@ -24,6 +25,7 @@
                 <form method="post">
                     <p>Zoom API key <input name="zoom_api_key" type="text"></p>
                     <p>Zoom API secret <input name="zoom_api_secret" type="text"></p>
+                    <p>Zoom email <input name="email" type="text"></p>
                     <p>Days for Zoom token <input name="duration" type="number"></p>
                     <button type="submit" formaction="/init/zoom">Set Zoom</button>
                 </form>
