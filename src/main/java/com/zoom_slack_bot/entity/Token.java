@@ -28,4 +28,10 @@ public class Token {
     @NonNull
     @Column(name = "exp_date")
     private LocalDate expDate;
+
+    public Token(@NonNull String jwt, @NonNull String email, @NonNull LocalDate expDate) {
+        this.jwt = jwt;
+        this.email = email;
+        this.expDate = expDate;
+    }
 }
