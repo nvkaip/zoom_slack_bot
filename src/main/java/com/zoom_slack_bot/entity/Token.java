@@ -9,8 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.time.LocalDate;
 
 @Data
@@ -28,7 +26,6 @@ public class Token {
     @Column(name = "email", nullable = false)
     private String email;
     @NonNull
-    @Temporal(TemporalType.DATE)
     @Column(name = "exp_date")
     private LocalDate expDate;
 }
