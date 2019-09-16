@@ -27,8 +27,8 @@ import java.util.Optional;
 @RestController
 public class SlackController {
 
-    private JWTUtil jwt;
     private TokenService tokenService;
+    private RestTemplate restTemplate = new RestTemplate();
     /**
      * Date "from" and "to" is in format yyyy.mm.dd, if needed, can be added to request params
      */
@@ -36,9 +36,6 @@ public class SlackController {
             "/recordings?page_size=30&mc=false&trash=<boolean>&from=<date>&to=<date>";//TODO from and to dates logic
     private static final String ZOOM_USER_INFO = "https://api.zoom.us/v2/users/%s" +
             "/?login_type=<string>";
-    private RestTemplate restTemplate = new RestTemplate();
-    private HttpEntity<String> entity;
-    private JSONObject responseBody;
 
     @Autowired
     public SlackController(TokenService tokenService) {
@@ -70,14 +67,15 @@ public class SlackController {
 
     @PostMapping("/recordings")
     public String getRecordings(@RequestParam(value = "text") String email) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + jwt.getJwt());//TODO make it form DB by email
-        entity = new HttpEntity<>(headers);
+        Optional<HttpEntity> optionalEntity = prepareHttpEntity(email);
+        if (!optionalEntity.isPresent()){
+            return "Token for Zoom is not set or expired";
+        }
         String urlString = String.format(ZOOM_RECORDINGS, email);
-        responseBody = new JSONObject();
+        JSONObject responseBody = new JSONObject();
         try {
             ResponseEntity<MeetingsList> responseEntity =
-                    restTemplate.exchange(urlString, HttpMethod.GET, entity, MeetingsList.class);
+                    restTemplate.exchange(urlString, HttpMethod.GET, optionalEntity.get(), MeetingsList.class);
             MeetingsList meetings = responseEntity.getBody();
             if (meetings != null
                     && !meetings.getMeetings().isEmpty()
@@ -103,14 +101,15 @@ public class SlackController {
 
     @PostMapping("/user")
     public String getUserSettings(@RequestParam(value = "text") String email) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + jwt.getJwt());//TODO make it form DB by email
-        entity = new HttpEntity<>(headers);
+        Optional<HttpEntity> optionalEntity = prepareHttpEntity(email);
+        if (!optionalEntity.isPresent()){
+            return "Token for Zoom is not set or expired";
+        }
         String urlString = String.format(ZOOM_USER_INFO, email);
-        responseBody = new JSONObject();
+        JSONObject responseBody = new JSONObject();
         try {
             ResponseEntity<User> responseEntity =
-                    restTemplate.exchange(urlString, HttpMethod.GET, entity, User.class);
+                    restTemplate.exchange(urlString, HttpMethod.GET, optionalEntity.get(), User.class);
             if (responseEntity.getBody() != null) {
                 String textResponse = responseEntity.getBody().toString();
                 responseBody.put("response_type", "in_channel");
@@ -137,10 +136,22 @@ public class SlackController {
 
     @PostMapping("/test")
     public String getSlackSlashRequest(@RequestParam(value = "text") String string){
-        responseBody = new JSONObject();
+        JSONObject responseBody = new JSONObject();
         log.info(string);
         responseBody.put("response_type", "in_channel");
         responseBody.put("text", string);
         return responseBody.toString();
+    }
+
+    private Optional<HttpEntity> prepareHttpEntity(String email){
+        Optional<Token> optionalToken = tokenService.getValidTokenByEmail(email, LocalDate.now());
+        if (!optionalToken.isPresent()){
+            return Optional.empty();
+        }
+        Token token = optionalToken.get();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + token.getJwt());
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        return Optional.of(entity);
     }
 }
