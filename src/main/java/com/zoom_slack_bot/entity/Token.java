@@ -1,6 +1,7 @@
 package com.zoom_slack_bot.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.persistence.Table;
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "token")
 public class Token {
@@ -28,10 +30,4 @@ public class Token {
     @NonNull
     @Column(name = "exp_date")
     private LocalDate expDate;
-
-    public Token(@NonNull String jwt, @NonNull String email, @NonNull LocalDate expDate) {
-        this.jwt = jwt;
-        this.email = email;
-        this.expDate = expDate;
-    }
 }
