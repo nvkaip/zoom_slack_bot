@@ -3,13 +3,16 @@ package com.zoom_slack_bot.util;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.time.LocalDate;
-import java.util.Objects;
 import static java.sql.Date.valueOf;
 
+@EqualsAndHashCode
+@ToString
 public class JWTUtil {
 
     private String jwt;
@@ -36,25 +39,5 @@ public class JWTUtil {
             builder.setExpiration(valueOf(expDate));
         }
         this.jwt = builder.compact();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        JWTUtil jwtUtil = (JWTUtil) o;
-        return Objects.equals(jwt, jwtUtil.jwt);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(jwt);
-    }
-
-    @Override
-    public String toString() {
-        return "JWTUtil{" +
-                "jwt='" + jwt + '\'' +
-                '}';
     }
 }
