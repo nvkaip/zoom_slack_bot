@@ -27,7 +27,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public Optional<Token> getValidTokenByEmail(String email, LocalDate localDate) {
-        return tokenRepository.getTokenByEmailAndExpDateAfter(email, localDate);
+        return tokenRepository.getTokenByEmailAndExpDateIsAfter(email, localDate);
     }
 
     @Override

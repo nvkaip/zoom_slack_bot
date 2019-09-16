@@ -12,6 +12,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -126,6 +127,12 @@ public class SlackController {
             responseBody.put("text", exceptionMessage);
         }
         return responseBody.toString();
+    }
+
+    @GetMapping("/test")
+    public String getTokenFromDB(){
+        Optional<Token> optionalToken = tokenService.getValidTokenByEmail("nvkaip@gmail.com", LocalDate.now());
+        return String.valueOf(optionalToken.isPresent());
     }
 
     @PostMapping("/test")

@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface TokenRepository extends CrudRepository<Token, Long> {
     List<Token> getTokensByEmail(String email);
-    Optional<Token> getTokenByEmailAndExpDateAfter(String email, LocalDate localDate);
+    Optional<Token> getTokenByEmailAndExpDateIsAfter(String email, LocalDate localDate);
 }
