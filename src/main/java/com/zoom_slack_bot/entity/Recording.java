@@ -1,9 +1,11 @@
 package com.zoom_slack_bot.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 import java.util.Objects;
 
+@Data
 public class Recording {
 
     private String id; // The recording file ID. Response in general query.
@@ -48,126 +50,126 @@ public class Recording {
                                     // `TIMELINE`
 
 
-    public Recording() {
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getMeetingId() {
-        return meetingId;
-    }
-
-    public void setMeetingId(String meeting_id) {
-        this.meetingId = meeting_id;
-    }
-
-    public String getRecordingStart() {
-        return recordingStart;
-    }
-
-    public void setRecordingStart(String recording_start) {
-        this.recordingStart = recording_start;
-    }
-
-    public String getRecordingEnd() {
-        return recordingEnd;
-    }
-
-    public void setRecordingEnd(String recording_end) {
-        this.recordingEnd = recording_end;
-    }
-
-    public String getFileType() {
-        return fileType;
-    }
-
-    public void setFileType(String file_type) {
-        this.fileType = file_type;
-    }
-
-    public Number getFileSize() {
-        return fileSize;
-    }
-
-    public void setFileSize(Number file_size) {
-        this.fileSize = file_size;
-    }
-
-    public String getPlayUrl() {
-        return playUrl;
-    }
-
-    public void setPlayUrl(String play_url) {
-        this.playUrl = play_url;
-    }
-
-    public String getDownloadUrl() {
-        return downloadUrl;
-    }
-
-    public void setDownloadUrl(String download_url) {
-        this.downloadUrl = download_url;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getDeletedTime() {
-        return deletedTime;
-    }
-
-    public void setDeletedTime(String deleted_time) {
-        this.deletedTime = deleted_time;
-    }
-
-    public String getRecordingType() {
-        return recordingType;
-    }
-
-    public void setRecordingType(String recording_type) {
-        this.recordingType = recording_type;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Recording recording = (Recording) o;
-        return Objects.equals(id, recording.id) &&
-                Objects.equals(meetingId, recording.meetingId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, meetingId, recordingStart, recordingEnd, fileType,
-                fileSize, playUrl, downloadUrl, status, deletedTime, recordingType);
-    }
-
-    @Override
-    public String toString() {
-        return "Recording{" +
-                "id='" + id + '\'' +
-                ", meetingId='" + meetingId + '\'' +
-                ", recordingStart='" + recordingStart + '\'' +
-                ", recordingEnd='" + recordingEnd + '\'' +
-                ", fileType='" + fileType + '\'' +
-                ", fileSize=" + fileSize +
-                ", playUrl='" + playUrl + '\'' +
-                ", downloadUrl='" + downloadUrl + '\'' +
-                ", status='" + status + '\'' +
-                ", deletedTime='" + deletedTime + '\'' +
-                ", recordingType='" + recordingType + '\'' +
-                '}';
-    }
+//    public Recording() {
+//    }
+//
+//    public String getId() {
+//        return id;
+//    }
+//
+//    public void setId(String id) {
+//        this.id = id;
+//    }
+//
+//    public String getMeetingId() {
+//        return meetingId;
+//    }
+//
+//    public void setMeetingId(String meeting_id) {
+//        this.meetingId = meeting_id;
+//    }
+//
+//    public String getRecordingStart() {
+//        return recordingStart;
+//    }
+//
+//    public void setRecordingStart(String recording_start) {
+//        this.recordingStart = recording_start;
+//    }
+//
+//    public String getRecordingEnd() {
+//        return recordingEnd;
+//    }
+//
+//    public void setRecordingEnd(String recording_end) {
+//        this.recordingEnd = recording_end;
+//    }
+//
+//    public String getFileType() {
+//        return fileType;
+//    }
+//
+//    public void setFileType(String file_type) {
+//        this.fileType = file_type;
+//    }
+//
+//    public Number getFileSize() {
+//        return fileSize;
+//    }
+//
+//    public void setFileSize(Number file_size) {
+//        this.fileSize = file_size;
+//    }
+//
+//    public String getPlayUrl() {
+//        return playUrl;
+//    }
+//
+//    public void setPlayUrl(String play_url) {
+//        this.playUrl = play_url;
+//    }
+//
+//    public String getDownloadUrl() {
+//        return downloadUrl;
+//    }
+//
+//    public void setDownloadUrl(String download_url) {
+//        this.downloadUrl = download_url;
+//    }
+//
+//    public String getStatus() {
+//        return status;
+//    }
+//
+//    public void setStatus(String status) {
+//        this.status = status;
+//    }
+//
+//    public String getDeletedTime() {
+//        return deletedTime;
+//    }
+//
+//    public void setDeletedTime(String deleted_time) {
+//        this.deletedTime = deleted_time;
+//    }
+//
+//    public String getRecordingType() {
+//        return recordingType;
+//    }
+//
+//    public void setRecordingType(String recording_type) {
+//        this.recordingType = recording_type;
+//    }
+//
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        Recording recording = (Recording) o;
+//        return Objects.equals(id, recording.id) &&
+//                Objects.equals(meetingId, recording.meetingId);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(id, meetingId, recordingStart, recordingEnd, fileType,
+//                fileSize, playUrl, downloadUrl, status, deletedTime, recordingType);
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return "Recording{" +
+//                "id='" + id + '\'' +
+//                ", meetingId='" + meetingId + '\'' +
+//                ", recordingStart='" + recordingStart + '\'' +
+//                ", recordingEnd='" + recordingEnd + '\'' +
+//                ", fileType='" + fileType + '\'' +
+//                ", fileSize=" + fileSize +
+//                ", playUrl='" + playUrl + '\'' +
+//                ", downloadUrl='" + downloadUrl + '\'' +
+//                ", status='" + status + '\'' +
+//                ", deletedTime='" + deletedTime + '\'' +
+//                ", recordingType='" + recordingType + '\'' +
+//                '}';
+//    }
 }
