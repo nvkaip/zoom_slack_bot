@@ -3,7 +3,6 @@ package com.zoom_slack_bot.controller;
 import com.zoom_slack_bot.entity.MeetingsList;
 import com.zoom_slack_bot.entity.User;
 import com.zoom_slack_bot.util.JWTUtil;
-import org.json.HTTP;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
