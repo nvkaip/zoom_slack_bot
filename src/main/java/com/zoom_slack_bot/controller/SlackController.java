@@ -1,10 +1,13 @@
 package com.zoom_slack_bot.controller;
 
 import com.zoom_slack_bot.entity.MeetingsList;
+import com.zoom_slack_bot.entity.Token;
 import com.zoom_slack_bot.entity.User;
+import com.zoom_slack_bot.services.TokenService;
 import com.zoom_slack_bot.util.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -16,31 +19,50 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
 @Slf4j
 @RestController
 public class SlackController {
 
     private JWTUtil jwt;
-
+    private TokenService tokenService;
     /**
      * Date "from" and "to" is in format yyyy.mm.dd, if needed, can be added to request params
      */
     private static final String ZOOM_RECORDINGS = "https://api.zoom.us/v2/users/%s" +
-            "/recordings?page_size=30&mc=false&trash=<boolean>&from=<date>&to=<date>";
+            "/recordings?page_size=30&mc=false&trash=<boolean>&from=<date>&to=<date>";//TODO from and to dates logic
     private static final String ZOOM_USER_INFO = "https://api.zoom.us/v2/users/%s" +
             "/?login_type=<string>";
     private RestTemplate restTemplate = new RestTemplate();
     private HttpEntity<String> entity;
     private JSONObject responseBody;
 
+    @Autowired
+    public SlackController(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
+
     @PostMapping("/init/zoom")
     public ModelAndView setZoomParams(@RequestParam(value = "zoom_api_key") String zoomApiKey,
                                 @RequestParam(value = "zoom_api_secret") String zoomApiSecret,
+                                @RequestParam(value = "email") String email,
                                 @RequestParam(value = "duration", defaultValue = "1") int days) {
-        jwt = new JWTUtil(zoomApiKey, zoomApiSecret, days);
+        Optional<Token> optionalToken = tokenService.getValidTokenByEmail(email, LocalDate.now());
         ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("message", "Token for Zoom set successfully");
-        log.info("Token for Zoom set successfully");
+        if (optionalToken.isPresent()){
+            modelAndView.addObject("message", "Token is active until: "
+                    + optionalToken.get().getExpDate());
+            log.info("Token for Zoom already exists and valid until: "
+                    + optionalToken.get().getExpDate());
+        } else {
+            JWTUtil jwt = new JWTUtil(zoomApiKey, zoomApiSecret, days);
+            Token newToken = new Token(jwt.getJwt(), email, LocalDate.now().plusDays(days));
+            tokenService.saveToken(newToken);
+            modelAndView.addObject("message", "Token for Zoom set successfully");
+            log.info("Token for Zoom set successfully");
+        }
         return modelAndView;
     }
 

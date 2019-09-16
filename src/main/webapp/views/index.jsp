@@ -24,6 +24,7 @@
                 <form method="post">
                     <p>Zoom API key <input name="zoom_api_key" type="text"></p>
                     <p>Zoom API secret <input name="zoom_api_secret" type="text"></p>
+                    <p>Zoom email <input name="email" type="email"></p>
                     <p>Days for Zoom token <input name="duration" type="number"></p>
                     <button type="submit" formaction="/init/zoom">Set Zoom</button>
                 </form>
