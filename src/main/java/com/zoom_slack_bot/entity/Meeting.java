@@ -2,12 +2,10 @@ package com.zoom_slack_bot.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 public class Meeting {
 
     private String uuid; // Meeting unique ID.

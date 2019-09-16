@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Objects;
 
 @Data
-@NoArgsConstructor
 public class MeetingsList {
 
     private List<Meeting> meetings;

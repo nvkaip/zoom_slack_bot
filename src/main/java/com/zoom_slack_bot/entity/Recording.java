@@ -2,10 +2,8 @@ package com.zoom_slack_bot.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 public class Recording {
 
     private String id; // The recording file ID. Response in general query.
