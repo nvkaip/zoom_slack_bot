@@ -63,6 +63,7 @@ public class SlackController {
             modelAndView.addObject("message", "Token for Zoom set successfully");
             log.info("Token for Zoom set successfully");
         }
+        log.info("All tokens for " + email + "\n" + tokenService.getTokensByEmail(email).toString());
         return modelAndView;
     }
 
