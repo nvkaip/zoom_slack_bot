@@ -23,12 +23,15 @@ public class Token {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
     @NonNull
     @Column(name = "jwt")
     private String jwt;
+
     @NonNull
     @Column(name = "email", nullable = false)
     private String email;
+
     @NonNull
     @Column(name = "exp_date")
     private LocalDate expDate;

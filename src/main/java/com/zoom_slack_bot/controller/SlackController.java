@@ -33,7 +33,7 @@ public class SlackController {
      * Date "from" and "to" is in format yyyy.mm.dd, if needed, can be added to request params
      */
     private static final String ZOOM_RECORDINGS = "https://api.zoom.us/v2/users/%s" +
-            "/recordings?page_size=30&mc=false&trash=<boolean>&from=<date>&to=<date>";//TODO from and to dates logic
+            "/recordings?page_size=30&mc=false&trash=<boolean>&from=<date>&to=<date>";// TODO from and to dates logic
     private static final String ZOOM_USER_INFO = "https://api.zoom.us/v2/users/%s" +
             "/?login_type=<string>";
 

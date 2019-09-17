@@ -7,7 +7,9 @@ import lombok.Data;
 public class User {
 
     private String id;
+
     @JsonProperty("first_name")
     private String firstName;
+
     private String email;
 }
