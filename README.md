@@ -1,11 +1,11 @@
 # zoom_slack_bot
 This is learning project for zoom_slack bot. In this project I used next stack:
 
-Java 8
-Spring Boot
-Spring DJPA - PostgreSQL Driver
-Lombok
-JWT
+- Java 8,
+- Spring Boot,
+- Spring DJPA - PostgreSQL Driver,
+- Lombok,
+- JWT.
 
 The purpose of bot is to gain some information from Zoom by receiving a slash commands from Slack. 
 And return information back in Slack.
