@@ -7,7 +7,7 @@ Spring DJPA - PostgreSQL Driver
 Lombok
 JWT
 
-The porpose of bot is to gain some information from Zoom by reciving a slash commands from Slack. 
+The purpose of bot is to gain some information from Zoom by receiving a slash commands from Slack. 
 And return information back in Slack.
 
 The bot was deployd on heroku.com and connected there to postgre database. 
